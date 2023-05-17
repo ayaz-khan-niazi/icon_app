@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:async';
 // import 'dart:ffi';
 import 'dart:io';
@@ -44,37 +46,52 @@ class _MyPDFViewerState extends State<MyPDFViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Builder(builder: (context) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          // appBar: AppBar(
-          //   title: Text('Plugin example app'),
-          // ),
-          body: Center(
-            child: Column(
-              children: <Widget>[
-                // ElevatedButton(
-                //   child: Text("Load pdf"),
-                //   onPressed: (){
-                //     loadPdf(widget.webViewURL);
-                //   },
-                // ),
-                if (pdfFlePath != null)
-                  Expanded(
-                    child: Container(
-                      child: PdfView(
-                          path: pdfFlePath!, gestureNavigationEnabled: true),
-                    ),
-                  )
-                else
-                  Text("Pdf is not Loaded"),
-              ],
-            ),
-          ),
-        );
-      }),
+    // return MaterialApp(
+    //   debugShowCheckedModeBanner: false,
+    //   home: Builder(builder: (context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+          backgroundColor: Color.fromARGB(251, 247, 10, 46),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(
+                'assets/images/indus-logo.png',
+                width: 120,
+              ),
+              SizedBox(
+                width: 40,
+              ),
+              Text(
+                "ICON 2024",
+                style: TextStyle(fontWeight: FontWeight.w900),
+              )
+            ],
+          )),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            // ElevatedButton(
+            //   child: Text("Load pdf"),
+            //   onPressed: (){
+            //     loadPdf(widget.webViewURL);
+            //   },
+            // ),
+            if (pdfFlePath != null)
+              Expanded(
+                child: Container(
+                  child: PdfView(
+                      path: pdfFlePath!, gestureNavigationEnabled: true),
+                ),
+              )
+            else
+              Text("Pdf is not Loaded"),
+          ],
+        ),
+      ),
     );
+    //   }),
+    // );
   }
 }

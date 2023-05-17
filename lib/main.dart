@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:icon/pdfviewer.dart';
+import 'package:icon/playground.dart';
+import 'package:icon/utilities/widget_animator.dart';
 import 'package:icon/web_view_container.dart';
 import 'package:icon/web_view_container2.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -38,7 +40,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   int _indexofMap = 0;
-  double _lat = 24.821821084127308;
+  double _lat = 24.821621084127308;
   double _lng = 67.11030449419727;
   void _onButtonMapTap(double lat, double lng) {
     setState(() {
@@ -52,9 +54,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   //     _indexofMap = index;
   //   });
   // }
-
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   void _onItemTapped(int index) {
     print(index);
@@ -80,16 +79,40 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 
   // ignore: unused_field
-  LatLng _center = LatLng(24.821821084127308, 67.11030449419727);
+  LatLng _center = LatLng(24.821621084127308, 67.11030449419727);
   // ignore: unused_field
   MapController _mapController = MapController();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Open Sans',
+        // primaryColor: Colors.green,
+      ),
+      home: Scaffold(
         key: scaffoldKey,
         drawerEnableOpenDragGesture: false,
+        appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Color.fromARGB(251, 247, 10, 46),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset(
+                  'assets/images/indus-logo.png',
+                  width: 120,
+                ),
+                SizedBox(
+                  width: 40,
+                ),
+                Text(
+                  "ICON 2024",
+                  style: TextStyle(fontWeight: FontWeight.w900),
+                )
+              ],
+            )),
         drawer: Drawer(
           // Add a ListView to the drawer. This ensures the user can scroll
           // through the options in the drawer if there isn't enough vertical
@@ -224,49 +247,210 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.all(15),
+                  // margin: EdgeInsets.all(3),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      // const SizedBox(
+                      //   height: 10,
+                      // ),
                       Image.asset('assets/images/dashboard_banner.png'),
                       const SizedBox(
                         height: 5,
                       ),
+                      //start of first widget
                       Container(
+                        margin: EdgeInsets.all(3),
                         width: double.infinity,
-                        height: 50,
+                        height: 45,
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(251, 247, 10, 46),
                           border: Border.all(
                               color: const Color.fromARGB(251, 247, 10, 46)),
                           borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(20.0),
+                            topRight: Radius.circular(11.0),
+                            topLeft: Radius.circular(11.0),
                           ),
                         ),
                         child: Row(
-                          children: const [
-                            SizedBox(width: 10),
-                            Text(
-                              "Inaugral Details",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  fontSize: 14),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(left: 5, right: 2),
+                              child: Text(
+                                "Inaugral Details",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
                             ),
-                            SizedBox(width: 20),
-                            Icon(Icons.location_on),
-                            Text(
-                              "vanue: QF,NST,SMP Lahore",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  fontSize: 14),
+                            Container(
+                              padding: EdgeInsets.only(left: 2, right: 5),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.location_on,
+                                      color: Colors.white, size: 18),
+                                  Text(
+                                    "QF,NST,SMP Lahore",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: const [
+                          SizedBox(
+                            width: 7,
+                          ),
+                          Icon(Icons.watch_later_outlined,
+                              size: 18,
+                              color: Color.fromARGB(251, 247, 10, 46)),
+                          Text(
+                            " Date and Time",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Color.fromARGB(251, 247, 10, 46),
+                                fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Column(
+                        children: [
+                          Row(
+                            children: const [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                "Day 1",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black,
+                                    fontSize: 16),
+                              ),
+                              Text(
+                                " - Friday, January 19, 2024",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                              // Text("08:30 AM to 5 PM (GMT+5)",style: TextStyle(
+                              // color: Colors.black,fontSize: 16), ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              const Text(
+                                "08:30 AM to 5 PM (GMT+5)",
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 16),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      // Column(
+                      //   children: [
+                      //     Row(
+                      //       children: const [
+                      //         SizedBox(
+                      //           width: 10,
+                      //         ),
+                      //         Text(
+                      //           "Day 2",
+                      //           style: TextStyle(
+                      //               fontWeight: FontWeight.w900,
+                      //               color: Colors.black,
+                      //               fontSize: 16),
+                      //         ),
+                      //         Text(
+                      //           " - Friday, January 19, 2024",
+                      //           style: TextStyle(
+                      //               color: Colors.black, fontSize: 16),
+                      //         ),
+                      //         // Text("08:30 AM to 5 PM (GMT+5)",style: TextStyle(
+                      //         // color: Colors.black,fontSize: 16), ),
+                      //       ],
+                      //     ),
+                      //     Row(
+                      //       children: [
+                      //         const SizedBox(
+                      //           width: 10,
+                      //         ),
+                      //         const Text(
+                      //           "08:30 AM to 5 PM (GMT+5)",
+                      //           style: TextStyle(
+                      //               color: Colors.black, fontSize: 16),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+                      //end of first widget
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(3),
+                        width: double.infinity,
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(251, 247, 10, 46),
+                          border: Border.all(
+                              color: const Color.fromARGB(251, 247, 10, 46)),
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(11.0),
+                            topLeft: Radius.circular(11.0),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(left: 5, right: 2),
+                              child: Text(
+                                "Closing Details",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    fontSize: 14),
+                              ),
                             ),
+                            Container(
+                              padding: EdgeInsets.only(left: 2, right: 5),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.location_on,
+                                      color: Colors.white, size: 18),
+                                  Text(
+                                    "Marriot hotel, Karachi",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                        fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -280,13 +464,14 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             width: 7,
                           ),
                           Icon(Icons.watch_later_outlined,
+                              size: 18,
                               color: Color.fromARGB(251, 247, 10, 46)),
                           Text(
-                            "Date and Time",
+                            " Date and Time",
                             style: TextStyle(
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.w600,
                                 color: Color.fromARGB(251, 247, 10, 46),
-                                fontSize: 18),
+                                fontSize: 16),
                           ),
                         ],
                       )),
@@ -305,15 +490,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                 style: TextStyle(
                                     fontWeight: FontWeight.w900,
                                     color: Colors.black,
-                                    fontSize: 18),
+                                    fontSize: 16),
                               ),
                               Text(
                                 " - Friday, January 19, 2024",
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                                    color: Colors.black, fontSize: 16),
                               ),
                               // Text("08:30 AM to 5 PM (GMT+5)",style: TextStyle(
-                              // color: Colors.black,fontSize: 18), ),
+                              // color: Colors.black,fontSize: 16), ),
                             ],
                           ),
                           Row(
@@ -324,7 +509,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               const Text(
                                 "08:30 AM to 5 PM (GMT+5)",
                                 style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
+                                    color: Colors.black, fontSize: 16),
                               ),
                             ],
                           ),
@@ -333,183 +518,43 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       const SizedBox(
                         height: 10,
                       ),
-                      Column(
-                        children: [
-                          Row(
-                            children: const [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Day 2",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.black,
-                                    fontSize: 18),
-                              ),
-                              Text(
-                                " - Friday, January 19, 2024",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              // Text("08:30 AM to 5 PM (GMT+5)",style: TextStyle(
-                              // color: Colors.black,fontSize: 18), ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              const Text(
-                                "08:30 AM to 5 PM (GMT+5)",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(251, 247, 10, 46),
-                          border: Border.all(
-                              color: const Color.fromARGB(251, 247, 10, 46)),
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(20.0),
-                            topLeft: Radius.circular(20.0),
-                          ),
-                        ),
-                        child: Row(
-                          children: const [
-                            SizedBox(width: 10),
-                            Text(
-                              "Closing Details",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  fontSize: 14),
-                            ),
-                            SizedBox(width: 20),
-                            Icon(Icons.location_on),
-                            Text(
-                              "vanue: Marriot hotel, Karachi",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                  fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                          child: Row(
-                        children: const [
-                          SizedBox(
-                            width: 7,
-                          ),
-                          Icon(Icons.watch_later_outlined,
-                              color: Color.fromARGB(251, 247, 10, 46)),
-                          Text(
-                            "Date and Time",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: Color.fromARGB(251, 247, 10, 46),
-                                fontSize: 18),
-                          ),
-                        ],
-                      )),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: const [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Day 1",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.black,
-                                    fontSize: 18),
-                              ),
-                              Text(
-                                " - Friday, January 19, 2024",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              // Text("08:30 AM to 5 PM (GMT+5)",style: TextStyle(
-                              // color: Colors.black,fontSize: 18), ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              const Text(
-                                "08:30 AM to 5 PM (GMT+5)",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            children: const [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                "Day 2",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.black,
-                                    fontSize: 18),
-                              ),
-                              Text(
-                                " - Friday, January 19, 2024",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              // Text("08:30 AM to 5 PM (GMT+5)",style: TextStyle(
-                              // color: Colors.black,fontSize: 18), ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              const Text(
-                                "08:30 AM to 5 PM (GMT+5)",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      // Column(
+                      //   children: [
+                      //     Row(
+                      //       children: const [
+                      //         SizedBox(
+                      //           width: 10,
+                      //         ),
+                      //         Text(
+                      //           "Day 2",
+                      //           style: TextStyle(
+                      //               fontWeight: FontWeight.w900,
+                      //               color: Colors.black,
+                      //               fontSize: 16),
+                      //         ),
+                      //         Text(
+                      //           " - Friday, January 19, 2024",
+                      //           style: TextStyle(
+                      //               color: Colors.black, fontSize: 16),
+                      //         ),
+                      //         // Text("08:30 AM to 5 PM (GMT+5)",style: TextStyle(
+                      //         // color: Colors.black,fontSize: 16), ),
+                      //       ],
+                      //     ),
+                      //     Row(
+                      //       children: [
+                      //         const SizedBox(
+                      //           width: 10,
+                      //         ),
+                      //         const Text(
+                      //           "08:30 AM to 5 PM (GMT+5)",
+                      //           style: TextStyle(
+                      //               color: Colors.black, fontSize: 16),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
                       const SizedBox(
                         height: 15,
                       ),
@@ -579,6 +624,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         height: 15,
                       ),
                       Container(
+                        margin: EdgeInsets.all(3),
                         width: double.infinity,
                         height: 50,
                         decoration: BoxDecoration(
@@ -591,12 +637,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                           ),
                         ),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
-                            SizedBox(width: 10),
+                            // SizedBox(width: 10),
                             Text(
                               "Directions (click on the name to view the map)",
                               style: TextStyle(
-                                  fontWeight: FontWeight.w900,
+                                  fontWeight: FontWeight.w600,
                                   color: Colors.white,
                                   fontSize: 14),
                             ),
@@ -607,14 +654,15 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         height: 15,
                       ),
                       Container(
+                        margin: EdgeInsets.only(left: 3, right: 3),
                         width: 500,
                         child: ElevatedButton(
                             onPressed: () {
                               // _onButtonMapTap(
-                              //     24.821821084127308, 67.11030449419727);
+                              //     24.821621084127308, 67.11030449419727);
                               _mapController.move(
-                                  LatLng(24.821821084127308, 67.11030449419727),
-                                  18);
+                                  LatLng(24.821621084127308, 67.11030449419727),
+                                  16);
                             },
                             child: Text("The Indus Hospital (TIH)"),
                             style: ButtonStyle()),
@@ -623,6 +671,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         height: 15,
                       ),
                       Container(
+                        margin: EdgeInsets.only(left: 3, right: 3),
                         width: 500,
                         child: ElevatedButton(
                             onPressed: () {
@@ -630,7 +679,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               //     24.814982851095635, 67.11973023178312);
                               _mapController.move(
                                   LatLng(24.861036056898726, 67.0007930745633),
-                                  18);
+                                  16);
                             },
                             child: Text("Sheikh Saeed Hospital (SSMC)"),
                             style: ButtonStyle()),
@@ -639,6 +688,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         height: 15,
                       ),
                       Container(
+                        margin: EdgeInsets.only(left: 3, right: 3),
                         width: 500,
                         child: ElevatedButton(
                             onPressed: () {
@@ -648,7 +698,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               // },
                               _mapController.move(
                                   LatLng(24.809627560080905, 67.12266254629961),
-                                  18);
+                                  16);
                             },
                             child: Text("Woodcraft Building (GHD)"),
                             style: ButtonStyle()),
@@ -657,12 +707,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         height: 15,
                       ),
                       Container(
+                        margin: EdgeInsets.only(left: 3, right: 3),
                         width: 500,
                         child: ElevatedButton(
                             onPressed: () {
                               _mapController.move(
                                   LatLng(24.845478722892537, 67.03158251149328),
-                                  18);
+                                  16);
                             },
                             child: Text("Karachi Marriott Hotel"),
                             style: ButtonStyle()),
@@ -671,12 +722,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                         height: 15,
                       ),
                       Container(
+                        margin: EdgeInsets.only(left: 3, right: 3),
                         width: 500,
                         child: ElevatedButton(
                             onPressed: () {
                               _mapController.move(
                                   LatLng(31.55316936355914, 74.30233008209936),
-                                  18);
+                                  16);
                             },
                             child: Text("QF,NST,SMP Lahore"),
                             style: ButtonStyle()),
@@ -690,7 +742,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                             child: FlutterMap(
                               options: MapOptions(
                                 center: _center,
-                                zoom: 18.2,
+                                zoom: 16.2,
                               ),
                               mapController: _mapController,
                               children: [
@@ -704,13 +756,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                                     Marker(
                                       width: 80.0,
                                       height: 80.0,
-                                      point: LatLng(24.821821084127308,
+                                      point: LatLng(24.821621084127308,
                                           67.11030449419727),
                                       builder: (ctx) => Container(
                                           child: GestureDetector(
                                         onTap: () {
                                           launchGoogleMapDirection(
-                                              24.821821084127308,
+                                              24.821621084127308,
                                               67.11030449419727);
                                         },
                                         child: Icon(Icons.location_pin,
@@ -808,166 +860,68 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 ),
               ),
               SafeArea(
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: EdgeInsets.only(left: 10, bottom: 12),
-                      child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyPDFViewer(
-                                  webViewURL:
-                                      'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
+                child: Container(
+                  padding: EdgeInsets.all(16.0),
+                  child: ListView.builder(
+                    itemCount: 20,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MyPDFViewer(
+                                    webViewURL:
+                                        'https://event.tih.org.pk/pdf/CMEcertificate.pdf')
+                                // MyAnimatedList()
+                                ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 4.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          child: ListTile(
+                            title: Text(
+                              "ICON 2024 suppliments",
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                            trailing: Icon(Icons.arrow_forward),
+                          ),
                         ),
-                        child: const Text(
-                          'ICON 2024 suppliments',
-                          style: TextStyle(color: Colors.blue, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: EdgeInsets.only(left: 10, bottom: 12),
-                      child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyPDFViewer(
-                                  webViewURL:
-                                      'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
-                        ),
-                        child: const Text(
-                          'ICON 2024 suppliments',
-                          style: TextStyle(color: Colors.blue, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: EdgeInsets.only(left: 10, bottom: 12),
-                      child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyPDFViewer(
-                                  webViewURL:
-                                      'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
-                        ),
-                        child: const Text(
-                          'ICON 2024 suppliments',
-                          style: TextStyle(color: Colors.blue, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: EdgeInsets.only(left: 10, bottom: 12),
-                      child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyPDFViewer(
-                                  webViewURL:
-                                      'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
-                        ),
-                        child: const Text(
-                          'ICON 2024 suppliments',
-                          style: TextStyle(color: Colors.blue, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: EdgeInsets.only(left: 10, bottom: 12),
-                      child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyPDFViewer(
-                                  webViewURL:
-                                      'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
-                        ),
-                        child: const Text(
-                          'ICON 2024 suppliments',
-                          style: TextStyle(color: Colors.blue, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: EdgeInsets.only(left: 10, bottom: 12),
-                      child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyPDFViewer(
-                                  webViewURL:
-                                      'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
-                        ),
-                        child: const Text(
-                          'ICON 2024 suppliments',
-                          style: TextStyle(color: Colors.blue, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 238, 238, 238),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      margin: EdgeInsets.only(left: 10, bottom: 12),
-                      child: InkWell(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MyPDFViewer(
-                                  webViewURL:
-                                      'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
-                        ),
-                        child: const Text(
-                          'ICON 2024 suppliments',
-                          style: TextStyle(color: Colors.blue, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                  ),
                 ),
+
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                //   children: [
+                //     Container(
+                //       height: 40,
+                //       alignment: Alignment.centerLeft,
+                //       decoration: BoxDecoration(
+                //         color: Color.fromARGB(255, 238, 238, 238),
+                //         borderRadius: BorderRadius.circular(10),
+                //       ),
+                //       margin: EdgeInsets.only(left: 10, bottom: 12),
+                //       child: InkWell(
+                //         onTap: () => Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => MyPDFViewer(
+                //                   webViewURL:
+                //                       'https://event.tih.org.pk/pdf/CMEcertificate.pdf')),
+                //         ),
+                //         child: const Text(
+                //           'ICON 2024 suppliments',
+                //           style: TextStyle(color: Colors.blue, fontSize: 20),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ),
               Container(
                   child: WebViewExample(
@@ -1004,8 +958,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
-          unselectedItemColor: Colors.black45,
+          selectedItemColor: Color.fromARGB(250, 247, 10, 10),
+          unselectedItemColor: Colors.black54,
           unselectedLabelStyle: const TextStyle(color: Colors.black45),
           onTap: _onItemTapped,
         ),
