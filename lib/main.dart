@@ -2,15 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:icon/pdfviewer.dart';
-import 'package:icon/playground.dart';
-import 'package:icon/utilities/widget_animator.dart';
+// import 'package:icon/playground.dart';
+// import 'package:icon/utilities/widget_animator.dart';
 import 'package:icon/web_view_container.dart';
 import 'package:icon/web_view_container2.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+// import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
+// import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'qrscanner.dart';

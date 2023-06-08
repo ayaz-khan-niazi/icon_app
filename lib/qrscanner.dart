@@ -1,32 +1,13 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-// void main() => runApp(const MaterialApp(home: MyHome()));
-
-// class MyHome extends StatelessWidget {
-//   const MyHome({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Flutter Demo Home Page')),
-//       body: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             Navigator.of(context).push(MaterialPageRoute(
-//               builder: (context) => const QRViewExample(),
-//             ));
-//           },
-//           child: const Text('qrView'),
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class QRViewExample extends StatefulWidget {
   const QRViewExample({Key? key}) : super(key: key);
@@ -39,6 +20,8 @@ class _QRViewExampleState extends State<QRViewExample> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  late SharedPreferences _preferences;
+  String _loggedInUsername = '';
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -49,6 +32,19 @@ class _QRViewExampleState extends State<QRViewExample> {
       controller!.pauseCamera();
     }
     controller!.resumeCamera();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initSharedPreferences();
+    // ... existing code ...
+  }
+
+  // Initialize SharedPreferences instance
+  Future<void> _initSharedPreferences() async {
+    _preferences = await SharedPreferences.getInstance();
+    _loggedInUsername = _preferences.getString('loggedInUsername') ?? '';
   }
 
   @override
@@ -168,10 +164,33 @@ class _QRViewExampleState extends State<QRViewExample> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
       setState(() {
         result = scanData;
       });
+      //https request start
+
+      // Make the HTTPS request
+      if (_loggedInUsername.isNotEmpty) {
+        if (result != null && _loggedInUsername.isNotEmpty) {
+          final url = Uri.https('event.tih.org.pk', '/markuserattendance', {
+            'code': result!.code,
+            'username': _loggedInUsername,
+          });
+
+          final response = await http.get(url);
+          if (response.statusCode == 200) {
+            final responseData = response.body;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    'Response of Attendance: ${responseData.toString()}')));
+          } else {}
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Please login first to mark attendance')));
+      }
+      //https request end
     });
   }
 
