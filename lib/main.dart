@@ -11,6 +11,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
@@ -78,6 +79,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     }
   }
 
+  // Retrieve the _loggedInUsername from SharedPreferences
+  Future<String> _getLoggedInUsername() async {
+    final preferences = await SharedPreferences.getInstance();
+    return preferences.getString('loggedInUsername') ?? '';
+  }
+
   // ignore: unused_field
   LatLng _center = LatLng(24.821621084127308, 67.11030449419727);
   // ignore: unused_field
@@ -121,12 +128,27 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
             // Important: Remove any padding from the ListView.
             padding: EdgeInsets.zero,
             children: [
-              // const DrawerHeader(
-              //   decoration: BoxDecoration(
-              //     color: Colors.blue,
-              //   ),
-              //   child: Text('Drawer Header'),
-              // ),
+              FutureBuilder(
+                // Retrieve the _loggedInUsername from SharedPreferences
+                future: _getLoggedInUsername(),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final loggedInUsername = snapshot.data ?? 'Please login';
+                    return DrawerHeader(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                      ),
+                      child: Text(
+                        loggedInUsername,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                },
+              ),
               ListTile(
                 leading: Icon(Icons.calendar_month),
                 title: const Text('Dates to Remember'),

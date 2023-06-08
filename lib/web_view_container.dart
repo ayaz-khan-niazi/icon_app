@@ -1,13 +1,3 @@
-// Copyright 2013 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-// ignore_for_file: public_member_api_docs
-
-// import 'dart:async';
-// import 'dart:convert';
-// import 'dart:io';
-// import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 // #docregion platform_imports
@@ -16,6 +6,7 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 // Import for iOS features.
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 // #enddocregion platform_imports
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WebViewExample extends StatefulWidget {
   final String webViewURL;
@@ -27,12 +18,14 @@ class WebViewExample extends StatefulWidget {
 
 class _WebViewExampleState extends State<WebViewExample> {
   late final WebViewController _controller;
+  late SharedPreferences _preferences; // SharedPreferences instance
+  String _loggedInUsername = '';
 
   @override
   void initState() {
     super.initState();
+    _initSharedPreferences(); // Initialize SharedPreferences
 
-    // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
@@ -45,7 +38,6 @@ class _WebViewExampleState extends State<WebViewExample> {
 
     final WebViewController controller =
         WebViewController.fromPlatformCreationParams(params);
-    // #enddocregion platform_features
 
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -53,13 +45,39 @@ class _WebViewExampleState extends State<WebViewExample> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            debugPrint('WebView is loading (progress : $progress%)');
+            debugPrint('WebView is loading (progress: $progress%)');
           },
           onPageStarted: (String url) {
             debugPrint('Page started loading: $url');
           },
-          onPageFinished: (String url) {
+          onPageFinished: (String url) async {
             debugPrint('Page finished loading: $url');
+            {
+              // Check if the USER cookie exists
+              final cookieExists =
+                  await controller.runJavaScriptReturningResult('''
+              document.cookie.includes('USER=');
+            ''');
+
+              if (cookieExists == true) {
+                // Fetch the cookie value
+                final loggedInUsername =
+                    await controller.runJavaScriptReturningResult('''
+                document.cookie
+                  .split('; ')
+                  .find(row => row.startsWith('USER='))
+                  .split('=')[1];
+              ''');
+                debugPrint('LOGGED IN USER IS: ${loggedInUsername.toString()}');
+                setState(() {
+                  _loggedInUsername = loggedInUsername.toString();
+                });
+                // Save _loggedInUsername to SharedPreferences
+                await _saveLoggedInUsername(loggedInUsername.toString());
+              } else {
+                await _saveLoggedInUsername("Unauthorized");
+              }
+            }
           },
           onWebResourceError: (WebResourceError error) {
             debugPrint('''
@@ -72,31 +90,42 @@ Page resource error:
           },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
-              debugPrint('blocking navigation to ${request.url}');
+              debugPrint('Blocking navigation to ${request.url}');
               return NavigationDecision.prevent;
             }
-            debugPrint('allowing navigation to ${request.url}');
+            debugPrint('Allowing navigation to ${request.url}');
             return NavigationDecision.navigate;
           },
         ),
       )
       ..addJavaScriptChannel(
-        'Toaster',
+        'ToFlutter',
         onMessageReceived: (JavaScriptMessage message) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(message.message)),
-          );
+          final username = message.message;
+          debugPrint('Received username from WebView: $username');
+          setState(() {
+            _loggedInUsername = username;
+          });
         },
       )
       ..loadRequest(Uri.parse(widget.webViewURL));
 
-    // #docregion platform_features
     if (controller.platform is AndroidWebViewController) {
       AndroidWebViewController.enableDebugging(true);
       (controller.platform as AndroidWebViewController)
           .setMediaPlaybackRequiresUserGesture(false);
     }
     _controller = controller;
+  }
+
+// Initialize SharedPreferences instance
+  Future<void> _initSharedPreferences() async {
+    _preferences = await SharedPreferences.getInstance();
+  }
+
+  // Save the _loggedInUsername value to SharedPreferences
+  Future<void> _saveLoggedInUsername(String username) async {
+    await _preferences.setString('loggedInUsername', username);
   }
 
   @override
@@ -106,4 +135,16 @@ Page resource error:
       body: WebViewWidget(controller: _controller),
     );
   }
+
+  // void _fetchLoggedInUsername(WebViewController controller) async {
+  //   final loggedInUsername = await controller.runJavaScriptReturningResult('''
+  //   // Replace 'getLoggedInUsername()' with the JavaScript function
+  //   // that returns the logged-in username from your website.
+  //   getLoggedInUsername();
+  // ''');
+  //   debugPrint('Fetched logged-in username from WebView: $loggedInUsername');
+  //   setState(() {
+  //     _loggedInUsername = loggedInUsername.toString();
+  //   });
+  // }
 }

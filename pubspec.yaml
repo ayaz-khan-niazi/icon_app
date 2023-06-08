@@ -44,6 +44,10 @@ dependencies:
   flutter_map: ^3.1.0
   location: ^4.3.0
   pdf_viewer_plugin: ^2.0.1
+  webview_flutter_android: ^3.7.1
+  webview_flutter_wkwebview: ^3.4.4
+  webview_flutter_platform_interface: ^2.3.1
+  shared_preferences: ^2.1.2
 
 dev_dependencies:
   flutter_test:
