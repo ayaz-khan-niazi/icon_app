@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -60,11 +61,10 @@ class _QRViewExampleState extends State<QRViewExample> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  else
-                    const Text('Scan a code'),
+                  // if (result != null)
+                  // Text('Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                  // else
+                  //   const Text('Scan a code'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -79,52 +79,53 @@ class _QRViewExampleState extends State<QRViewExample> {
                             child: FutureBuilder(
                               future: controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
+                                return Text(
+                                    'Flash: ${snapshot.data == true ? "On" : "Off"}');
                               },
                             )),
                       ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return const Text('loading');
-                                }
-                              },
-                            )),
-                      )
+                      // Container(
+                      //   margin: const EdgeInsets.all(8),
+                      //   child: ElevatedButton(
+                      //       onPressed: () async {
+                      //         await controller?.flipCamera();
+                      //         setState(() {});
+                      //       },
+                      //       child: FutureBuilder(
+                      //         future: controller?.getCameraInfo(),
+                      //         builder: (context, snapshot) {
+                      //           if (snapshot.data != null) {
+                      //             return Text(
+                      //                 'Camera facing ${describeEnum(snapshot.data!)}');
+                      //           } else {
+                      //             return const Text('loading');
+                      //           }
+                      //         },
+                      //       )),
+                      // )
                     ],
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
+                      // Container(
+                      //   margin: const EdgeInsets.all(8),
+                      //   child: ElevatedButton(
+                      //     onPressed: () async {
+                      //       await controller?.pauseCamera();
+                      //     },
+                      //     child: const Text('pause',
+                      //         style: TextStyle(fontSize: 20)),
+                      //   ),
+                      // ),
                       Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                           onPressed: () async {
                             await controller?.resumeCamera();
                           },
-                          child: const Text('resume',
+                          child: const Text('Refresh Camera',
                               style: TextStyle(fontSize: 20)),
                         ),
                       )
@@ -168,23 +169,41 @@ class _QRViewExampleState extends State<QRViewExample> {
       setState(() {
         result = scanData;
       });
+      controller.pauseCamera();
       //https request start
 
       // Make the HTTPS request
-      if (_loggedInUsername.isNotEmpty) {
-        if (result != null && _loggedInUsername.isNotEmpty) {
-          final url = Uri.https('event.tih.org.pk', '/markuserattendance', {
-            'code': result!.code,
+      if (_loggedInUsername != "Unauthorized") {
+        if (result != null) {
+          // final url = Uri.https('event.tih.org.pk', '/markuserattendance', {
+          //   'code': result!.code,
+          //   'username': _loggedInUsername,
+          // });
+
+          // final response = await http.get(url);
+          final url =
+              Uri.parse('https://event.tih.org.pk/Login.aspx/MarkAttendance');
+          final headers = {
+            'Content-Type': 'application/json',
+          };
+          final body = jsonEncode({
+            'qrCodeResult': result!.code,
             'username': _loggedInUsername,
           });
-
-          final response = await http.get(url);
+          final response = await http.post(url, headers: headers, body: body);
           if (response.statusCode == 200) {
             final responseData = response.body;
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text(
                     'Response of Attendance: ${responseData.toString()}')));
-          } else {}
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    'There is some issue marking your attendance. Please try again.')));
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Scanning unsuccessfull. Please try again.')));
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

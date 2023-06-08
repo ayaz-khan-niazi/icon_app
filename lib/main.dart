@@ -139,11 +139,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     final loggedInUsername = snapshot.data ?? 'Please login';
                     return DrawerHeader(
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: Color.fromARGB(251, 247, 10, 46),
                       ),
-                      child: Text(
-                        loggedInUsername,
-                        style: TextStyle(color: Colors.black),
+                      child: Center(
+                        child: Text(
+                          loggedInUsername,
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     );
                   } else {

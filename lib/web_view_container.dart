@@ -73,7 +73,8 @@ class _WebViewExampleState extends State<WebViewExample> {
                   _loggedInUsername = loggedInUsername.toString();
                 });
                 // Save _loggedInUsername to SharedPreferences
-                await _saveLoggedInUsername(loggedInUsername.toString());
+                await _saveLoggedInUsername(
+                    loggedInUsername.toString().replaceAll('"', ''));
               } else {
                 await _saveLoggedInUsername("Unauthorized");
               }
