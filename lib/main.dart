@@ -13,6 +13,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'qrscanner.dart';
+
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
@@ -186,7 +188,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   // Update the state of the app
                   // ...
                   // Then close the drawer
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const QRViewExample(),
+                  ));
                 },
               ),
               ListTile(
